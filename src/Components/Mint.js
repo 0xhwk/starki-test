@@ -92,36 +92,34 @@ const Mint = () => {
   });
   if (_totalSupply !== undefined && _totalSupply[0].toNumber() !== totalSupply)
     setTotalSupply(_totalSupply[0].toNumber());
-  console.log(wlStatus);
-  const calls =
-    wlStatus === 0
-      ? [
-          {
-            contractAddress:
-              "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-            entrypoint: "approve",
-            calldata: [contractAddress, 8000000000000000, 0],
-          },
-          {
-            contractAddress: contractAddress,
-            entrypoint: "publicMint",
-            calldata: [],
-          },
-        ]
-      : [
-          {
-            contractAddress:
-              "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-            entrypoint: "approve",
-            calldata: [contractAddress, 8000000000000000, 0],
-          },
-          {
-            contractAddress: contractAddress,
-            entrypoint: "wlMint",
-            calldata: [proof.length, ...proof],
-          },
-        ];
 
+  const calls = [
+    {
+      contractAddress:
+        "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+      entrypoint: "approve",
+      calldata: [contractAddress, 4000000000000000, 0],
+    },
+    {
+      contractAddress: contractAddress,
+      entrypoint: "wlMint",
+      calldata: [proof.length, ...proof],
+    },
+  ];
+
+  // [
+  //   {
+  //     contractAddress:
+  //       "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+  //     entrypoint: "approve",
+  //     calldata: [contractAddress, 4000000000000000, 0],
+  //   },
+  //   {
+  //     contractAddress: contractAddress,
+  //     entrypoint: "publicMint",
+  //     calldata: [],
+  //   },
+  // ]
   const { execute, loading } = useStarknetExecute({ calls });
 
   const { data } = useTransactionReceipt({ hash, watch: true });
