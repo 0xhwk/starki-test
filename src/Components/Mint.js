@@ -40,6 +40,7 @@ const Mint = () => {
   const { contractAddress, abi } = config;
   const [notification, setNotification] = useState();
   const [wlStatus, setWlStatus] = useState(0);
+  const [totalSupply, setTotalSupply] = useState(0);
   const [proof, setProof] = useState([]);
   const [hash, setHash] = useState(undefined);
   const { address, status } = useAccount();
@@ -47,7 +48,6 @@ const Mint = () => {
 
   const firebase = (address) => {
     const db = getDatabase();
-    console.log(address);
     const reference = ref(db, `/${address}`);
     onValue(reference, (snapshot) => {
       const data = snapshot.val();
@@ -81,7 +81,21 @@ const Mint = () => {
     setWlStatus(wlmint[0].toNumber());
 
   //
-
+  const {
+    data: _totalSupply,
+    loading: _totalSupplyLoading,
+    error: _totalSupplyError,
+    refresh: _totalSupplyRefresh,
+  } = useStarknetCall({
+    contract,
+    method: "totalSupply",
+    args: [""],
+    options: {
+      watch: false,
+    },
+  });
+  if (_totalSupply != undefined && _totalSupply[0].toNumber() != totalSupply)
+    setTotalSupply(_totalSupply[0].toNumber());
   const calls =
     wlStatus == 0
       ? [
@@ -144,7 +158,7 @@ const Mint = () => {
                     ? "Please switch to mainnet ! "
                     : proof.length == 0
                     ? "Not Whitelisted"
-                    : "Click Here To Mint !"}
+                    : `${totalSupply}/650 Minted !`}
                 </div>
                 <motion.button
                   initial={{ y: 0, x: 0 }}
