@@ -15,8 +15,8 @@ import "../App.css";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getDatabase, ref, onValue } from "firebase/database";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -64,12 +64,7 @@ const Mint = () => {
     abi: abi,
   });
 
-  const {
-    data: wlmint,
-    loading: wlload,
-    error,
-    refresh,
-  } = useStarknetCall({
+  const { data: _wlStatus } = useStarknetCall({
     contract,
     method: "isWhitelistMintActive",
     args: [""],
@@ -77,8 +72,8 @@ const Mint = () => {
       watch: false,
     },
   });
-  if (wlmint != undefined && wlmint[0].toNumber() != wlStatus)
-    setWlStatus(wlmint[0].toNumber());
+  if (_wlStatus !== undefined && _wlStatus[0].toNumber() !== wlStatus)
+    setWlStatus(_wlStatus[0].toNumber());
 
   //
   const {
@@ -94,10 +89,10 @@ const Mint = () => {
       watch: false,
     },
   });
-  if (_totalSupply != undefined && _totalSupply[0].toNumber() != totalSupply)
+  if (_totalSupply !== undefined && _totalSupply[0].toNumber() !== totalSupply)
     setTotalSupply(_totalSupply[0].toNumber());
   const calls =
-    wlStatus == 0
+    wlStatus === 0
       ? [
           {
             contractAddress:
@@ -154,9 +149,9 @@ const Mint = () => {
                 <div className="mint-title">
                   {status === "disconnected"
                     ? "Please Connect Your Wallet"
-                    : chain.id != "0x534e5f4d41494e"
-                    ? "Please switch to mainnet ! "
-                    : proof.length == 0
+                    : chain.id !== "0x534e5f4d41494e"
+                    ? "Please switch to mainnet and refresh the page ! "
+                    : proof.length === 0
                     ? "Not Whitelisted"
                     : `${totalSupply}/650 Minted !`}
                 </div>
@@ -172,7 +167,10 @@ const Mint = () => {
                     })
                   }
                   disabled={
-                    status === "disconnected" || loading || proof.length == 0
+                    status === "disconnected" ||
+                    loading ||
+                    proof.length === 0 ||
+                    chain.id !== "0x534e5f4d41494e"
                       ? true
                       : false
                   }

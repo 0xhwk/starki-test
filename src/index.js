@@ -8,7 +8,7 @@ const connectors = [
   new InjectedConnector({ options: { id: "argentX" } }),
   new InjectedConnector({ options: { id: "braavos" } }),
 ];
-const provider = new Provider({
+const testnetProvider = new Provider({
   sequencer: {
     baseUrl: "https://alpha4.starknet.io",
     feederGatewayUrl: "https://alpha4.starknet.io/feeder_gateway",
@@ -16,10 +16,18 @@ const provider = new Provider({
     gatewayUrl: "https://alpha4.starknet.io/gateway",
   },
 });
+const mainnetProvider = new Provider({
+  sequencer: {
+    baseUrl: "https://alpha-mainnet.starknet.io",
+    feederGatewayUrl: "https://alpha-mainnet.starknet.io/feeder_gateway",
+    chainId: "0x534e5f4d41494e",
+    gatewayUrl: "https://alpha-mainnet.starknet.io/gateway",
+  },
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <StarknetConfig defaultProvider={provider} connectors={connectors}>
+  <StarknetConfig defaultProvider={mainnetProvider} connectors={connectors}>
     <React.StrictMode>
       <App />
     </React.StrictMode>
