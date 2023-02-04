@@ -42,6 +42,7 @@ const Mint = () => {
   const [wlStatus, setWlStatus] = useState(0);
   const [totalSupply, setTotalSupply] = useState(0);
   const [proof, setProof] = useState([]);
+  const [calls, setCalls] = useState([]);
   const [hash, setHash] = useState(undefined);
   const { address, status } = useAccount();
   const { chain } = useNetwork();
@@ -92,9 +93,10 @@ const Mint = () => {
   });
   if (_totalSupply !== undefined && _totalSupply[0].toNumber() !== totalSupply)
     setTotalSupply(_totalSupply[0].toNumber());
-  const calls =
+
+  useEffect(() => {
     wlStatus === 0
-      ? [
+      ? setCalls([
           {
             contractAddress:
               "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
@@ -106,8 +108,8 @@ const Mint = () => {
             entrypoint: "publicMint",
             calldata: [],
           },
-        ]
-      : [
+        ])
+      : setCalls([
           {
             contractAddress:
               "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
@@ -119,7 +121,8 @@ const Mint = () => {
             entrypoint: "wlMint",
             calldata: [proof.length, ...proof],
           },
-        ];
+        ]);
+  }, [wlStatus]);
 
   const { execute, loading } = useStarknetExecute({ calls });
 
