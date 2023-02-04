@@ -41,8 +41,6 @@ const Mint = () => {
   const [notification, setNotification] = useState();
   const [wlStatus, setWlStatus] = useState(0);
   const [totalSupply, setTotalSupply] = useState(0);
-  const [publicPrice, setPublicPrice] = useState(8000000000000000);
-  const [wlPrice, setWlPrice] = useState(4000000000000000);
   const [proof, setProof] = useState([]);
   const [hash, setHash] = useState(undefined);
   const { address, status } = useAccount();
@@ -74,30 +72,11 @@ const Mint = () => {
       watch: false,
     },
   });
+
   if (_wlStatus !== undefined && _wlStatus[0].toNumber() !== wlStatus)
     setWlStatus(_wlStatus[0].toNumber());
 
-  const { data: _wlPrice } = useStarknetCall({
-    contract,
-    method: "mintPrice",
-    args: [""],
-    options: {
-      watch: false,
-    },
-  });
-  if (_wlPrice !== undefined && _wlPrice !== wlPrice) setWlPrice(_wlPrice);
-
-  const { data: _publicPrice } = useStarknetCall({
-    contract,
-    method: "publicMintPrice",
-    args: [""],
-    options: {
-      watch: false,
-    },
-  });
-  if (_publicPrice !== undefined && _publicPrice !== publicPrice)
-    setPublicPrice(_publicPrice);
-  console.log(publicPrice, wlPrice);
+  //
   const {
     data: _totalSupply,
     loading: _totalSupplyLoading,
@@ -120,7 +99,7 @@ const Mint = () => {
             contractAddress:
               "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
             entrypoint: "approve",
-            calldata: [contractAddress, publicPrice, 0],
+            calldata: [contractAddress, 8000000000000000, 0],
           },
           {
             contractAddress: contractAddress,
@@ -133,7 +112,7 @@ const Mint = () => {
             contractAddress:
               "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
             entrypoint: "approve",
-            calldata: [contractAddress, wlPrice, 0],
+            calldata: [contractAddress, 8000000000000000, 0],
           },
           {
             contractAddress: contractAddress,
